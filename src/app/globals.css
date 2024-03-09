@@ -2,13 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --vh: 1vh; /* Default value */
-}
 
-.element {
-  height: calc(var(--vh, 1vh) * 100);
-}
 :root {
   --foreground-rgb: 0, 0, 0;
   --background-start-rgb: 214, 219, 220;

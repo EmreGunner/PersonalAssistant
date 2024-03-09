@@ -46,17 +46,7 @@ const itemPlacement = {
 };
 // Main component rendering the 3D learning environment
 export const Experience = () => {
-    useEffect(() => {
-        const setVH = () => {
-          const vh = window.innerHeight * 0.01;
-          document.documentElement.style.setProperty('--vh', `${vh}px`);
-        };
     
-        setVH();
-        window.addEventListener('resize', setVH);
-    
-        return () => window.removeEventListener('resize', setVH);
-      }, []);
   const teacher = useAITeacher((state) => state.teacher);
   const classroom = useAITeacher((state) => state.classroom);
 
