@@ -1,6 +1,6 @@
 const { create } = require("zustand");
 
-export const teachers = ["Nanami", "Naoki"];
+export const teachers = ["Emel", "Ahmet"];
 
 export const useAITeacher = create((set, get) => ({
   messages: [],
@@ -80,9 +80,12 @@ export const useAITeacher = create((set, get) => ({
         loading: true,
       }));
       // Get TTS
+      console.log('----------------------------------------------------------------')
+      console.log(message.answer)
+      console.log('----------------------------------------------------------------')  
       const audioRes = await fetch(
-        `/api/tts?teacher=${get().teacher}&text=${message.answer.japanese
-          .map((word) => word.word)
+        `/api/tts?teacher=${get().teacher}&text=${message.answer.turkish
+          .map((word) => word.word || "")
           .join(" ")}`
       );
       const audio = await audioRes.blob();

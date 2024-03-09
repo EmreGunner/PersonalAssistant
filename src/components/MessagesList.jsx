@@ -9,8 +9,10 @@ export const MessagesList = () => {
   const furigana = useAITeacher((state) => state.furigana);
   const classroom = useAITeacher((state) => state.classroom);
 
+  // Reference to the container for automatic scrolling
   const container = useRef();
 
+  // Effect to scroll to the bottom of the message list whenever a new message is added
   useEffect(() => {
     container.current.scrollTo({
       top: container.current.scrollHeight,
@@ -18,6 +20,7 @@ export const MessagesList = () => {
     });
   }, [messages.length]);
 
+  // Functions to render English and Turkish text with conditional rendering based on user preferences
   const renderEnglish = (englishText) => (
     <>
       {english && (
@@ -28,9 +31,9 @@ export const MessagesList = () => {
     </>
   );
 
-  const renderJapanese = (japanese) => (
-    <p className="text-white font-bold text-4xl mt-2 font-jp flex flex-wrap gap-1">
-      {japanese.map((word, i) => (
+  const renderTurkish = (turkish) => (
+    <p className="text-white font-bold text-4xl mt-2 font-tr flex flex-wrap gap-1">
+      {turkish.map((word, i) => (
         <span key={i} className="flex flex-col justify-end items-center">
           {furigana && word.reading && (
             <span className="text-2xl text-white/65">{word.reading}</span>
@@ -41,11 +44,12 @@ export const MessagesList = () => {
     </p>
   );
 
+  // Render the messages list with UI for playing and stopping voice messages
   return (
     <div
       className={`${
         classroom === "default"
-          ? "w-[1288px] h-[676px]"
+         ? "w-[1288px] h-[676px]"
           : "w-[2528px] h-[856px]"
       } p-8 overflow-y-auto flex flex-col space-y-8 bg-transparent opacity-80`}
       ref={container}
@@ -53,12 +57,14 @@ export const MessagesList = () => {
       {messages.length === 0 && (
         <div className="h-full w-full grid place-content-center text-center">
           <h2 className="text-8xl font-bold text-white/90 italic">
-            Wawa Sensei
+            Emre Gunner
             <br />
-            Japanese Language School
+            Ai Language School 
+            <br />
+            Turkish
           </h2>
-          <h2 className="text-8xl font-bold font-jp text-red-600/90 italic">
-            ワワ先生日本語学校
+          <h2 className="text-8xl font-bold font-tr text-red-600/90 italic">
+            Emre Gunner Yapay Zeka Destekli Dil Okulu
           </h2>
         </div>
       )}
@@ -70,7 +76,7 @@ export const MessagesList = () => {
                 <span
                   className={`text-white/90 text-2xl font-bold uppercase px-3 py-1 rounded-full  ${
                     message.speech === "formal"
-                      ? "bg-indigo-600"
+                     ? "bg-indigo-600"
                       : "bg-teal-600"
                   }`}
                 >
@@ -79,9 +85,9 @@ export const MessagesList = () => {
                 {renderEnglish(message.answer.english)}
               </div>
 
-              {renderJapanese(message.answer.japanese)}
+              {renderTurkish(message.answer.turkish)}
             </div>
-            {currentMessage === message ? (
+            {currentMessage === message? (
               <button
                 className="text-white/65"
                 onClick={() => stopMessage(message)}
@@ -102,7 +108,7 @@ export const MessagesList = () => {
                   <path
                     strokeLinecap="round"
                     strokeLinejoin="round"
-                    d="M9 9.563C9 9.252 9.252 9 9.563 9h4.874c.311 0 .563.252.563.563v4.874c0 .311-.252.563-.563.563H9.564A.562.562 0 0 1 9 14.437V9.564Z"
+                    d="M9 9.563C9 9.252 9.252 9 9.563 9h4.874c.311 0.563.252.563.563v4.874c0.311-.252.563-.563.563H9.564A.562.562 0 0 1 9 14.437V9.564Z"
                   />
                 </svg>
               </button>
@@ -127,7 +133,7 @@ export const MessagesList = () => {
                   <path
                     strokeLinecap="round"
                     strokeLinejoin="round"
-                    d="M15.91 11.672a.375.375 0 0 1 0 .656l-5.603 3.113a.375.375 0 0 1-.557-.328V8.887c0-.286.307-.466.557-.327l5.603 3.112Z"
+                    d="M15.91 11.672a.375.375 0 0 1 0.656l-5.603 3.113a.375.375 0 0 1-.557-.328V8.887c0-.286.307-.466.557-.327l5.603 3.112Z"
                   />
                 </svg>
               </button>
@@ -142,15 +148,15 @@ export const MessagesList = () => {
                 {message.answer.grammarBreakdown.length > 1 && (
                   <>
                     {renderEnglish(grammar.english)}
-                    {renderJapanese(grammar.japanese)}
+                    {renderTurkish(grammar.turkish)}
                   </>
                 )}
 
                 <div className="mt-3 flex flex-wrap gap-3 items-end">
                   {grammar.chunks.map((chunk, i) => (
                     <div key={i} className="p-2 bg-black/30 rounded-md">
-                      <p className="text-white/90 text-4xl font-jp">
-                        {renderJapanese(chunk.japanese)}
+                      <p className="text-white/90 text-4xl font-tr">
+                        {renderTurkish(chunk.turkish)}
                       </p>
                       <p className="text-pink-300/90 text-2xl">
                         {chunk.meaning}

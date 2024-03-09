@@ -1,111 +1,105 @@
+// Import the OpenAI SDK to interact with the OpenAI API.
 import OpenAI from "openai";
 
+// Initialize the OpenAI API client with your API key from the environment variables.
 const openai = new OpenAI({
   apiKey: process.env["OPENAI_API_KEY"] // This is the default and can be omitted
 });
 
+// Examples of formal and casual Japanese speech structures for teaching purposes.
 const formalExample = {
-  japanese: [
-    { word: "日本", reading: "にほん" },
-    { word: "に" },
-    { word: "住んで", reading: "すんで" },
-    { word: "います" },
-    { word: "か" },
-    { word: "?" },
+  turkish: [
+    { word: "Türkiye", reading: "Türkiye'de" },
+    { word: "yaşıyor", reading: "yaşıyor" },
+    { word: "musun", reading: "musun" },
+    { word: "?", reading: "?" }
   ],
   grammarBreakdown: [
     {
-      english: "Do you live in Japan?",
-      japanese: [
-        { word: "日本", reading: "にほん" },
-        { word: "に" },
-        { word: "住んで", reading: "すんで" },
-        { word: "います" },
-        { word: "か" },
-        { word: "?" },
+      english: "Do you live in Turkey?",
+      turkish: [
+        { word: "Türkiye", reading: "Türkiye'de" },
+        { word: "yaşıyor", reading: "yaşıyor" },
+        { word: "musun", reading: "musun" },
+        { word: "?", reading: "?" }
       ],
       chunks: [
         {
-          japanese: [{ word: "日本", reading: "にほん" }],
-          meaning: "Japan",
-          grammar: "Noun",
+          turkish: [{ word: "Türkiye", reading: "Türkiye'de" }],
+          meaning: "Turkey",
+          grammar: "Location (in Turkey)"
         },
         {
-          japanese: [{ word: "に" }],
-          meaning: "in",
-          grammar: "Particle",
-        },
-        {
-          japanese: [{ word: "住んで", reading: "すんで" }, { word: "います" }],
+          turkish: [{ word: "yaşıyor", reading: "yaşıyor" }],
           meaning: "live",
-          grammar: "Verb + て form + います",
+          grammar: "Present continuous tense"
         },
         {
-          japanese: [{ word: "か" }],
-          meaning: "question",
-          grammar: "Particle",
+          turkish: [{ word: "musun", reading: "musun" }],
+          meaning: "you (formal)",
+          grammar: "Question form for 'you'"
         },
         {
-          japanese: [{ word: "?" }],
-          meaning: "question",
-          grammar: "Punctuation",
-        },
-      ],
-    },
-  ],
+          turkish: [{ word: "?", reading: "?" }],
+          meaning: "Question mark",
+          grammar: "Indicates a question"
+        }
+      ]
+    }
+  ]
 };
 
 const casualExample = {
-  japanese: [
-    { word: "日本", reading: "にほん" },
-    { word: "に" },
-    { word: "住んで", reading: "すんで" },
-    { word: "いる" },
-    { word: "の" },
-    { word: "?" },
+  turkish: [
+    { word: "Türkiye'ye", reading: "Türkiye'ye" },
+    { word: "hiç", reading: "hiç" },
+    { word: "gittin", reading: "gittin" },
+    { word: "mi", reading: "mi" },
+    { word: "?", reading: "?" }
   ],
   grammarBreakdown: [
     {
-      english: "Do you live in Japan?",
-      japanese: [
-        { word: "日本", reading: "にほん" },
-        { word: "に" },
-        { word: "住んで", reading: "すんで" },
-        { word: "いる" },
-        { word: "の" },
-        { word: "?" },
+      english: "Have you ever been to Turkey?",
+      turkish: [
+        { word: "Türkiye'ye", reading: "Türkiye'ye" },
+        { word: "hiç", reading: "hiç" },
+        { word: "gittin", reading: "gittin" },
+        { word: "mi", reading: "mi" },
+        { word: "?", reading: "?" }
       ],
       chunks: [
         {
-          japanese: [{ word: "日本", reading: "にほん" }],
-          meaning: "Japan",
-          grammar: "Noun",
+          turkish: [{ word: "Türkiye'ye", reading: "Türkiye'ye" }],
+          meaning: "to Turkey",
+          grammar: "Direction (to Turkey)"
         },
         {
-          japanese: [{ word: "に" }],
-          meaning: "in",
-          grammar: "Particle",
+          turkish: [{ word: "hiç", reading: "hiç" }],
+          meaning: "ever",
+          grammar: "Adverb"
         },
         {
-          japanese: [{ word: "住んで", reading: "すんで" }, { word: "いる" }],
-          meaning: "live",
-          grammar: "Verb + て form + いる",
+          turkish: [{ word: "gittin", reading: "gittin" }],
+          meaning: "did go",
+          grammar: "Past tense, 2nd person singular"
         },
         {
-          japanese: [{ word: "の" }],
-          meaning: "question",
-          grammar: "Particle",
+          turkish: [{ word: "mi", reading: "mi" }],
+          meaning: "question particle",
+          grammar: "Makes the sentence a question"
         },
         {
-          japanese: [{ word: "?" }],
-          meaning: "question",
-          grammar: "Punctuation",
-        },
-      ],
-    },
-  ],
+          turkish: [{ word: "?", reading: "?" }],
+          meaning: "Question mark",
+          grammar: "Indicates a question"
+        }
+      ]
+    }
+  ]
 };
 
+
+// The main function that responds to GET requests with language translation and grammar breakdown.
 export async function GET(req) {
   // WARNING: Do not expose your keys
   // WARNING: If you host publicly your project, add an authentication layer to limit the consumption of ChatGPT resources
@@ -117,14 +111,15 @@ export async function GET(req) {
     messages: [
       {
         role: "system",
-        content: `You are a Japanese language teacher. 
-Your student asks you how to say something from english to japanese.
-You should respond with: 
-- english: the english version ex: "Do you live in Japan?"
-- japanese: the japanese translation in split into words ex: ${JSON.stringify(
-          speechExample.japanese
+        content: `You are a Turkish language teacher specializing in English Turkish. 
+Your student asks how to say something from English to Turkish.
+Make sure your answer is gramatically correct.
+Respond with: 
+- English: the original sentence e.g., "Do you live in Turkey?"
+- Turkish: the Turkish translation in split words ex: ${JSON.stringify(
+          speechExample.turkish
         )}
-- grammarBreakdown: an explanation of the grammar structure per sentence ex: ${JSON.stringify(
+- GrammarBreakdown: an explanation of the grammar structure per sentence ex: ${JSON.stringify(
           speechExample.grammarBreakdown
         )}
 `,
@@ -134,18 +129,18 @@ You should respond with:
         content: `You always respond with a JSON object with the following format: 
         {
           "english": "",
-          "japanese": [{
+          "turkish": [{
             "word": "",
             "reading": ""
           }],
           "grammarBreakdown": [{
             "english": "",
-            "japanese": [{
+            "turkish": [{
               "word": "",
               "reading": ""
             }],
             "chunks": [{
-              "japanese": [{
+              "turkish": [{
                 "word": "",
                 "reading": ""
               }],
@@ -159,16 +154,17 @@ You should respond with:
         role: "user",
         content: `How to say ${
           req.nextUrl.searchParams.get("question") ||
-          "Have you ever been to Japan?"
-        } in Japanese in ${speech} speech?`,
+          "Do you live in Turkey?"
+        } in Turkish in ${speech} speech?`,
       },
     ],
-    // model: "gpt-4-turbo-preview", // https://platform.openai.com/docs/models/gpt-4-and-gpt-4-turbo
-    model: "gpt-3.5-turbo", // https://help.openai.com/en/articles/7102672-how-can-i-access-gpt-4
+    model: "gpt-3.5-turbo",
     response_format: {
       type: "json_object",
     },
   });
+  // Logs the AI's response for debugging purposes.
   console.log(chatCompletion.choices[0].message.content);
+  // Returns the AI's response as a JSON object to the requester.
   return Response.json(JSON.parse(chatCompletion.choices[0].message.content));
 }

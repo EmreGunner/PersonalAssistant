@@ -1,6 +1,8 @@
+// Utilize the custom hook to access and manage state related to the AI teaching environment
 import { teachers, useAITeacher } from "@/hooks/useAITeacher";
 
 export const BoardSettings = () => {
+    // State hooks for user preferences and settings
   const furigana = useAITeacher((state) => state.furigana);
   const setFurigana = useAITeacher((state) => state.setFurigana);
 
@@ -15,8 +17,8 @@ export const BoardSettings = () => {
 
   const classroom = useAITeacher((state) => state.classroom);
   const setClassroom = useAITeacher((state) => state.setClassroom);
-
   return (
+// Top UI section for selecting a teacher. Displays teacher images that can be clicked to select a teacher.
     <>
       <div className="absolute right-0 bottom-full flex flex-row gap-10 mb-20">
         {teachers.map((sensei, idx) => (
@@ -90,7 +92,7 @@ export const BoardSettings = () => {
           } py-4 px-10 text-4xl rounded-full transition-colors duration-500 backdrop-blur-md`}
           onClick={() => setFurigana(!furigana)}
         >
-          Furigana
+          Explanation
         </button>
         <button
           className={`${

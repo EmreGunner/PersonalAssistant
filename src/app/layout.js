@@ -18,6 +18,8 @@ export const metadata = {
   title: "AI Sensei",
   description: "Learn Japanese with AI Sensei",
 };
+// Defines global metadata for the application including the title and description.
+// RootLayout component wraps child components with globally defined font styles for consistency across the application.
 export default function RootLayout({ children }) {
   return (
     <html lang="en" className={`${roboto.variable} ${notoSansJP.variable}`} >
