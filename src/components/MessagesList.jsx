@@ -47,13 +47,12 @@ export const MessagesList = () => {
   // Render the messages list with UI for playing and stopping voice messages
   return (
     <div
-    className={`${
-      classroom === "default"
-        ? "sm:w-[1288px] lg:w-[1288px] xl:w-[1288px] 2xl:w-[1288px]" // Tailwind's responsive classes for larger screens
-        : "sm:w-[2528px] lg:w-[2528px] xl:w-[2528px] 2xl:w-[2528px]"
-    } w-full h-auto p-8 overflow-y-auto flex flex-col space-y-8 bg-transparent opacity-80`}
-    
-  ref={container}
+      className={`${
+        classroom === "default"
+         ? "w-[1288px] h-[676px]"
+          : "w-[2528px] h-[856px]"
+      } p-8 overflow-y-auto flex flex-col space-y-8 bg-transparent opacity-80`}
+      ref={container}
     >
       {messages.length === 0 && (
         <div className="h-full w-full grid place-content-center text-center">
