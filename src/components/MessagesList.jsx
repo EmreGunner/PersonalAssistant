@@ -55,8 +55,8 @@ export const MessagesList = () => {
       ref={container}
     >
       {messages.length === 0 && (
-        <div className="w-full grid place-content-center text-center">
-          <h2 className="text-8xl font-bold text-white/90 italic">
+        <div className="grid place-content-center text-center">
+          <h2 className="w-full text-8xl font-bold text-white/90 italic">
             Emre Gunner
             <br />
             Ai Language School 
