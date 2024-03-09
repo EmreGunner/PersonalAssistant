@@ -17,7 +17,7 @@ export const BoardSettings = () => {
 
   const classroom = useAITeacher((state) => state.classroom);
   const setClassroom = useAITeacher((state) => state.setClassroom);
-  setClassroom("alternative")
+  
   return (
 // Top UI section for selecting a teacher. Displays teacher images that can be clicked to select a teacher.
     <>
