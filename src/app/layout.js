@@ -23,6 +23,10 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en" className={`${roboto.variable} ${notoSansJP.variable}`} >
+      <head>
+          <meta name="viewport" content="width=device-width, initial-scale=1" />
+          {/* Other tags like stylesheets or fonts */}
+      </head>
       <body className={roboto.className}>{children}</body>
     </html>
   );
