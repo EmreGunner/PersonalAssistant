@@ -15,8 +15,8 @@ export const notoSansJP = Noto_Sans_JP({
 });
 
 export const metadata = {
-  title: "AI Sensei",
-  description: "Learn Japanese with AI Sensei",
+  title: "Eng To TR AI Teacher",
+  description: "Learn Turkish with AI Teacher",
 };
 // Defines global metadata for the application including the title and description.
 // RootLayout component wraps child components with globally defined font styles for consistency across the application.
