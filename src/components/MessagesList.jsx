@@ -71,22 +71,7 @@ export const MessagesList = () => {
       {messages.map((message, i) => (
         <div key={i}>
           <div className="flex">
-            <div className="flex-grow">
-              <div className="flex items-center gap-3">
-                <span
-                  className={`text-white/90 text-2xl font-bold uppercase px-3 py-1 rounded-full  ${
-                    message.speech === "formal"
-                     ? "bg-indigo-600"
-                      : "bg-teal-600"
-                  }`}
-                >
-                  {message.speech}
-                </span>
-                {renderEnglish(message.answer.english)}
-              </div>
-
-              {renderTurkish(message.answer.turkish)}
-            </div>
+           
             {currentMessage === message? (
               <button
                 className="text-white/65"
