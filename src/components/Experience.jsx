@@ -67,7 +67,7 @@ export const Experience = () => {
           <Html
             transform
             {...itemPlacement[classroom].board}
-            distanceFactor={0.3}
+            distanceFactor={0.5}
           >
             <MessagesList />
             <BoardSettings />
