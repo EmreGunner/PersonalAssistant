@@ -48,10 +48,8 @@ export const MessagesList = () => {
   return (
     <div
       className={`${
-        classroom === "default"
-         ? "w-[1288px] h-[676px]"
-          : "w-[2528px] h-[856px]"
-      } p-8 overflow-y-auto flex flex-col space-y-8 bg-transparent opacity-80`}
+        classroom === "default"  ? "max-w-lg" : "max-w-2xl"
+      }  w-full p-4 sm:p-8 overflow-y-auto flex flex-col space-y-8 bg-transparent opacity-80`}
       ref={container}
     >
       {messages.length === 0 && (
