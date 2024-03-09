@@ -47,14 +47,16 @@ export const MessagesList = () => {
   // Render the messages list with UI for playing and stopping voice messages
   return (
     <div
-      className={`${
-        classroom === "default"  ? "max-w-lg" : "max-w-2xl"
-      }  w-full p-4 sm:p-8 overflow-y-auto flex flex-col space-y-8 bg-transparent opacity-80`}
-      ref={container}
+    className={`
+    ${classroom === "default" ? "sm:w-[1288px] sm:h-[676px]" : "sm:w-[2528px] sm:h-[856px]"}
+    w-full h-full  // Default to full width and height on smaller screens
+    p-8 overflow-y-auto flex flex-col space-y-8 bg-transparent opacity-80
+  `}
+  ref={container}
     >
       {messages.length === 0 && (
-        <div className="grid place-content-center text-center">
-          <h2 className="w-full text-8xl font-bold text-white/90 italic">
+        <div className="h-full w-full grid place-content-center text-center">
+          <h2 className="text-8xl font-bold text-white/90 italic">
             Emre Gunner
             <br />
             Ai Language School 
