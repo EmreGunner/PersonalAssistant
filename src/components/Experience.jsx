@@ -1,8 +1,5 @@
-// Directives for SSR optimization and hydration control
 "use client";
-// Custom hook for accessing AI teacher state
 import { useAITeacher } from "@/hooks/useAITeacher";
-// Importing 3D and UI elements from Drei and Fiber
 import {
   CameraControls,
   Environment,
@@ -21,7 +18,6 @@ import { MessagesList } from "./MessagesList";
 import { Teacher } from "./Teacher";
 import { TypingBox } from "./TypingBox";
 
-// Predefined positions and transformations for 3D models
 const itemPlacement = {
   default: {
     classroom: {
@@ -32,7 +28,6 @@ const itemPlacement = {
     },
     board: {
       position: [0.45, 0.382, -6],
-
     },
   },
   alternative: {
@@ -42,12 +37,11 @@ const itemPlacement = {
       scale: 0.4,
     },
     teacher: { position: [-1, -1.7, -3] },
-    board: { position: [0.7, 0.42, -4] },
+    board: { position: [1.4, 0.84, -8] },
   },
 };
-// Main component rendering the 3D learning environment
+
 export const Experience = () => {
-    
   const teacher = useAITeacher((state) => state.teacher);
   const classroom = useAITeacher((state) => state.classroom);
 
@@ -95,7 +89,7 @@ export const Experience = () => {
     </>
   );
 };
-// Camera positions and zoom levels for different states
+
 const CAMERA_POSITIONS = {
   default: [0, 6.123233995736766e-21, 0.0001],
   loading: [
@@ -110,7 +104,6 @@ const CAMERA_ZOOMS = {
   speaking: 2.1204819420055387,
 };
 
-// Manages camera behavior based on application state
 const CameraManager = () => {
   const controls = useRef();
   const loading = useAITeacher((state) => state.loading);
@@ -152,6 +145,6 @@ const CameraManager = () => {
     />
   );
 };
-// Preloads GLTF models to improve load times and performance
+
 useGLTF.preload("/models/classroom_default.glb");
 useGLTF.preload("/models/classroom_alternative.glb");
