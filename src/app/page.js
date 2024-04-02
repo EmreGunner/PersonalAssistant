@@ -1,8 +1,6 @@
 // Importing the Experience component from the components directory and the Image component from Next.js for potential future use.
 import { Experience } from "@/components/Experience";
 import FeaturesSection from "@/components/FeatureSection";
-import { MacbookScroll } from "@/components/ui/macbook-scroll";
-import { HeroParallax } from "@/components/ui/hero-parallax";
 import Image from "next/image";
 import ResumeSection from "@/components/resume";
 import Navbar from '@/components/Navbar'; 
