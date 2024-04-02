@@ -6,22 +6,33 @@ export const TypingBox = () => {
   const askAI = useAITeacher((state) => state.askAI);// Function to submit a question to the AI
   const loading = useAITeacher((state) => state.loading);// Loading state indicating if the AI is processing
   const [question, setQuestion] = useState("");// Local state for managing the user's input
-
+  const chatlog = useAITeacher((state) => state.chatlog);
+  const addChatMessage = useAITeacher((state) => state.addChatMessage)
+  console.log("From TypingBox " ,chatlog);
    // Function to invoke the AI response and reset the input field
   const ask = () => {
-    askAI(question);
-    setQuestion("");
+    if (question.trim() !== "") {
+      // Add the user's question to the chatlog with the user as "me"
+      addChatMessage({ 
+        user: "me", 
+        message: question 
+      });
+
+      // Then, submit the question to the AI
+     
+      askAI(question);
+      setQuestion(""); // Reset the input field after submission
+    }
   };
     // Component rendering the input box and a submit button
   return (
-    <div className="z-10 max-w-[600px] flex space-y-6 flex-col bg-gradient-to-tr  from-slate-300/30 via-gray-400/30 to-slate-600-400/30 p-4  backdrop-blur-md rounded-xl border-slate-100/30 border">
+    <div className="z-10 max-w-[500px] flex space-y-6 flex-col bg-gradient-to-tr  from-slate-300/30 via-gray-400/30 to-slate-600-400/30 p-4  backdrop-blur-md rounded-xl border-slate-100/30 border">
       <div>
         <h2 className="text-white font-bold text-xl">
-          How to say in Turkish?
+          Chat With Our Ai Sales Asistant
         </h2>
         <p className="text-white/65">
-          Type a sentence you want to say in Turkish and AI Sensei will
-          translate it for you.
+          Type a sentence you want to ask regarding your needs
         </p>
       </div>
 
@@ -36,7 +47,7 @@ export const TypingBox = () => {
         <div className="gap-3 flex">
           <input
             className="focus:outline focus:outline-white/80 flex-grow bg-slate-800/60 p-2 px-4 rounded-full text-white placeholder:text-white/50 shadow-inner shadow-slate-900/60"
-            placeholder="Have you ever been to Turkey?"
+            placeholder="Need Ai for ..."
             value={question}
             onChange={(e) => setQuestion(e.target.value)}
             onKeyDown={(e) => {

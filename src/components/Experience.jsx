@@ -19,7 +19,32 @@ import { degToRad } from "three/src/math/MathUtils";
 import { BoardSettings } from "./BoardSettings";
 import { MessagesList } from "./MessagesList";
 import { Teacher } from "./Teacher";
-import { TypingBox } from "./TypingBox";
+import { TypingBox } from "./TypingBox"; 
+import { useState } from "react";
+import CalendlyEmbed from './CalendlyEmbed';
+
+const useCalendly = () => {
+  useEffect(() => {
+    const scriptId = 'calendly-script';
+    
+    if (document.getElementById(scriptId)) {
+      return; // script already loaded
+    }
+
+    const script = document.createElement('script');
+    script.id = scriptId;
+    script.src = 'https://assets.calendly.com/assets/external/widget.js';
+    script.async = true;
+    document.body.appendChild(script);
+
+    return () => {
+      // Cleanup the script when the component unmounts
+      document.body.removeChild(script);
+    };
+  }, []);
+};
+
+export default useCalendly;
 
 // Predefined positions and transformations for 3D models
 const itemPlacement = {
@@ -47,41 +72,52 @@ const itemPlacement = {
 };
 // Main component rendering the 3D learning environment
 export const Experience = () => {
-    
+
+  const [showCalendly, setShowCalendly] = useState(false);
+  // Hook to load Calendly s  cript
+  useCalendly();
+  console.log("SHOW Calendly Is Called")
   const teacher = useAITeacher((state) => state.teacher);
   const classroom = useAITeacher((state) => state.classroom);
 
   return (
     <>
-      <div className="z-10 md:justify-center fixed bottom-4 left-4 right-4 flex gap-3 flex-wrap justify-stretch">
-        <TypingBox />
-      </div>
-      <Leva hidden />
+       {/* Conditionally render the TypingBox based on showCalendly */}
+       {!showCalendly && (
+            <div className="z-10 md:justify-center absolute bottom-4 left-4 right-4 flex gap-3 flex-wrap justify-stretch">
+                <TypingBox />
+            </div>
+        )}
+      <Leva hidden/>
       <Loader />
       <Canvas
         camera={{
           position: [0, 0, 0.0001],
         }}
       >
-        <CameraManager />
-
+        
+        <CameraManager showCalendly={showCalendly} />
         <Suspense>
           <Float speed={0.5} floatIntensity={0.2} rotationIntensity={0.1}>
-            <Html
-              transform
-              {...itemPlacement[classroom].board}
-              distanceFactor={1}
-            >
+          <Html
+            transform
+            {...itemPlacement[classroom].board}
+            distanceFactor={1}
+          >
+            {showCalendly ? (
+              <CalendlyEmbed />
+            ) : (
               <MessagesList />
-              <BoardSettings />
-            </Html>
-            <Environment preset="sunset" />
-            <ambientLight intensity={0.8} color="pink" />
+            )}
+            {/* This conditional rendering chooses between showing the Calendly embed or the message list */}
+            <BoardSettings setShowCalendly={setShowCalendly} />
+            {/* Ensure BoardSettings can toggle the Calendly view */}
+          </Html>
 
-            <Gltf
-              src={`/models/classroom_${classroom}.glb`}
-              {...itemPlacement[classroom].classroom}
-            />
+            
+            <Environment preset="sunset" />
+            <ambientLight intensity={0.8} color="white" />
+           
             <Teacher
               teacher={teacher}
               key={teacher}
@@ -102,16 +138,21 @@ const CAMERA_POSITIONS = {
     0.00002621880610890309, 0.00000515037441056466, 0.00009636414192870058,
   ],
   speaking: [0, -1.6481333940859815e-7, 0.00009999846226827279],
+  appointment : [
+    -0.00007862001532975673,
+    -0.002024580857759796,
+    0.1009755609698477]
 };
 
 const CAMERA_ZOOMS = {
   default: 1,
   loading: 1.3,
   speaking: 2.1204819420055387,
+  appointment: 3,
 };
 
 // Manages camera behavior based on application state
-const CameraManager = () => {
+const CameraManager = ({ showCalendly }) => {
   const controls = useRef();
   const loading = useAITeacher((state) => state.loading);
   const currentMessage = useAITeacher((state) => state.currentMessage);
@@ -123,8 +164,14 @@ const CameraManager = () => {
     } else if (currentMessage) {
       controls.current?.setPosition(...CAMERA_POSITIONS.speaking, true);
       controls.current?.zoomTo(CAMERA_ZOOMS.speaking, true);
+    }  else if (showCalendly) {
+      console.log('Setting camera for appointment');
+      controls.current?.setPosition(...CAMERA_POSITIONS.appointment, true);
+      // Assume a zoom level for appointment or reuse an existing one
+      controls.current?.zoomTo(CAMERA_ZOOMS.appointment, true);
     }
-  }, [loading]);
+    
+  }, [loading, currentMessage, showCalendly]);
 
   useControls("Helper", {
     getCameraPosition: button(() => {
@@ -153,5 +200,5 @@ const CameraManager = () => {
   );
 };
 // Preloads GLTF models to improve load times and performance
-useGLTF.preload("/models/classroom_default.glb");
-useGLTF.preload("/models/classroom_alternative.glb");
+//useGLTF.preload("/models/classroom_default.glb");
+//useGLTF.preload("/models/classroom_alternative.glb");

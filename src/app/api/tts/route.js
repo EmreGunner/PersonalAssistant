@@ -13,9 +13,10 @@ export async function GET(req) {
 
     // Set the voice name based on the requested teacher, defaulting to "Nanami"
   // https://learn.microsoft.com/en-us/azure/ai-services/speech-service/language-support?tabs=tts
-  const teacher = req.nextUrl.searchParams.get("teacher") || "Emel";
+  //const teacher = req.nextUrl.searchParams.get("teacher") || "Emel";
   //speechConfig.speechSynthesisVoiceName = `ja-JP-${teacher}Neural`;
-  speechConfig.speechSynthesisVoiceName = `tr-TR-${teacher}Neural`;
+  //speechConfig.speechSynthesisVoiceName = `tr-TR-${teacher}Neural`;
+  speechConfig.speechSynthesisVoiceName = `en-US-AvaNeural`;
 
   const speechSynthesizer = new sdk.SpeechSynthesizer(speechConfig);
   const visemes = [];

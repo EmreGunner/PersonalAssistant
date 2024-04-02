@@ -5,6 +5,22 @@ export const teachers = ["Emel", "Ahmet"];
 export const useAITeacher = create((set, get) => ({
   messages: [],
   currentMessage: null,
+  chatlog: [
+    {
+      user: "gpt",
+      message: "Hi, how can I help you?",
+    },
+  ],
+  /**
+   * Adds a new chat message to the chatlog.
+   * @param {Object} newChatMessage - The new chat message to add.
+   */
+  addChatMessage: (newChatMessage) => {
+    set((state) => ({
+      chatlog: [...state.chatlog, newChatMessage],
+    }));
+  },
+
   teacher: teachers[0],
   setTeacher: (teacher) => {
     set(() => ({
@@ -55,64 +71,83 @@ export const useAITeacher = create((set, get) => ({
     const speech = get().speech;
 
     // Ask AI
+    
     const res = await fetch(`/api/ai?question=${question}&speech=${speech}`);
     const data = await res.json();
-    message.answer = data;
+    console.log("RESPONSE FROM AI AS DATA : ",data);
+    message.answer = data.answer;
+     get().addChatMessage({
+      user: "gpt",
+      message: message.answer
+    });
     message.speech = speech;
-
-    set(() => ({
-      currentMessage: message,
-    }));
-
-    set((state) => ({
-      messages: [...state.messages, message],
-      loading: false,
-    }));
+    
     get().playMessage(message);
   },
   playMessage: async (message) => {
-    set(() => ({
-      currentMessage: message,
-    }));
-
-    if (!message.audioPlayer) {
+    if(message.answer) {
+      if (!message.visemes || !message.audioPlayer)  {
       set(() => ({
         loading: true,
       }));
-      // Get TTS
       console.log('----------------------------------------------------------------')
-      console.log(message.answer)
-      console.log('----------------------------------------------------------------')  
-      const audioRes = await fetch(
-        `/api/tts?teacher=${get().teacher}&text=${message.answer.turkish
-          .map((word) => word.word || "")
-          .join(" ")}`
-      );
-      const audio = await audioRes.blob();
-      const visemes = JSON.parse(await audioRes.headers.get("visemes"));
-      const audioUrl = URL.createObjectURL(audio);
-      const audioPlayer = new Audio(audioUrl);
+      console.log("JUST RECEIVED MESSAGE ",message)
+      console.log('----------------------------------------------------------------')
 
-      message.visemes = visemes;
-      message.audioPlayer = audioPlayer;
-      message.audioPlayer.onended = () => {
-        set(() => ({
-          currentMessage: null,
-        }));
-      };
-      set(() => ({
-        loading: false,
-        messages: get().messages.map((m) => {
-          if (m.id === message.id) {
-            return message;
+          if (!message.audioPlayer) {
+            // Get TTS
+            const audioRes = await fetch(
+              `/api/tts?teacher=${get().teacher}&text=${encodeURIComponent(
+                message.answer
+              )}`
+            );
+            const audio = await audioRes.blob();
+            const visemes = JSON.parse(await audioRes.headers.get("visemes"));
+            console.log("GOT VISEMES ", visemes);
+            const audioUrl = URL.createObjectURL(audio);
+            const audioPlayer = new Audio(audioUrl);
+            
+            
+            if (typeof message === 'string') {
+              message = { answer: message,visemes: visemes,audioPlayer: audioPlayer};
+            }
+            message.visemes = visemes;
+            message.audioPlayer = audioPlayer;
+            message.audioPlayer.onended = () => {
+              set(() => ({
+                currentMessage: null,
+              }));
+            };
+
+            console.log("----------------------------------------------------------------");
+            console.log(message);
+            console.log("----------------------------------------------------------------");
+          
+            set(() => ({
+              loading: false,
+              messages: get().messages.map((m) => {
+                if (m.id === message.id) {
+                  return message;
+                }
+                return m;
+              }),
+            }));
           }
-          return m;
-        }),
-      }));
-    }
-
+    
+          set(() => ({
+      currentMessage: message,
+    }));
     message.audioPlayer.currentTime = 0;
     message.audioPlayer.play();
+  }
+  }
+  else if (message){
+  console.log("problem detected message, trying to fix : ", message);
+  message  =  { answer: message};
+  get().playMessage(message);
+  } else {
+    console.log("problem detected with message could not fix it " + message)
+  }
   },
   stopMessage: (message) => {
     message.audioPlayer.pause();

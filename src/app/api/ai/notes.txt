@@ -1,0 +1,100 @@
+notes
+const formalExample = {
+  turkish: [
+    { word: "Türkiye", reading: "Türkiye'de" },
+    { word: "yaşıyor", reading: "yaşıyor" },
+    { word: "musun", reading: "musun" },
+    { word: "?", reading: "?" }
+  ],
+  grammarBreakdown: [
+    {
+      english: "Do you live in Turkey?",
+      turkish: [
+        { word: "Türkiye", reading: "Türkiye'de" },
+        { word: "yaşıyor", reading: "yaşıyor" },
+        { word: "musun", reading: "musun" },
+        { word: "?", reading: "?" }
+      ],
+      chunks: [
+        {
+          turkish: [{ word: "Türkiye", reading: "Türkiye'de" }],
+          meaning: "Turkey",
+          grammar: "Location (in Turkey)"
+        },
+        {
+          turkish: [{ word: "yaşıyor", reading: "yaşıyor" }],
+          meaning: "live",
+          grammar: "Present continuous tense"
+        },
+        {
+          turkish: [{ word: "musun", reading: "musun" }],
+          meaning: "you (formal)",
+          grammar: "Question form for 'you'"
+        },
+        {
+          turkish: [{ word: "?", reading: "?" }],
+          meaning: "Question mark",
+          grammar: "Indicates a question"
+        }
+      ]
+    }
+  ]
+};
+
+
+const chatCompletion = await openai.chat.completions.create({
+    messages: [
+      {
+        role: "system",
+        content: `You are a Turkish language teacher specializing in English Turkish. 
+Your student asks how to say something from English to Turkish.
+Make sure your answer is gramatically correct.
+Respond with: 
+- English: the original sentence e.g., "Do you live in Turkey?"
+- Turkish: the Turkish translation in split words ex: ${JSON.stringify(
+          speechExample.turkish
+        )}
+- GrammarBreakdown: an explanation of the grammar structure per sentence ex: ${JSON.stringify(
+          speechExample.grammarBreakdown
+        )}
+`,
+      },
+      {
+        role: "system",
+        content: `You always respond with a JSON object with the following format: 
+        {
+          "english": "",
+          "turkish": [{
+            "word": "",
+            "reading": ""
+          }],
+          "grammarBreakdown": [{
+            "english": "",
+            "turkish": [{
+              "word": "",
+              "reading": ""
+            }],
+            "chunks": [{
+              "turkish": [{
+                "word": "",
+                "reading": ""
+              }],
+              "meaning": "",
+              "grammar": ""
+            }]
+          }]
+        }`,
+      },
+      {
+        role: "user",
+        content: `How to say ${
+          req.nextUrl.searchParams.get("question") ||
+          "Do you live in Turkey?"
+        } in Turkish in ${speech} speech?`,
+      },
+    ],
+    model: "gpt-3.5-turbo",
+    response_format: {
+      type: "json_object",
+    },
+  });

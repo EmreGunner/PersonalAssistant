@@ -1,7 +1,7 @@
 // Utilize the custom hook to access and manage state related to the AI teaching environment
 import { teachers, useAITeacher } from "@/hooks/useAITeacher";
 
-export const BoardSettings = () => {
+export const BoardSettings = ({ setShowCalendly }) => {
     // State hooks for user preferences and settings
   const furigana = useAITeacher((state) => state.furigana);
   const setFurigana = useAITeacher((state) => state.setFurigana);
@@ -17,29 +17,20 @@ export const BoardSettings = () => {
 
   const classroom = useAITeacher((state) => state.classroom);
   const setClassroom = useAITeacher((state) => state.setClassroom);
-  
+  const handleAppointmentClick = () => {
+    setShowCalendly(true);
+  };
+  const handleAssistantClick = () => {
+    // If the Calendly appointment view is currently shown, this will hide it
+        setShowCalendly(false);
+};
+ 
+
+
   return (
 // Top UI section for selecting a teacher. Displays teacher images that can be clicked to select a teacher.
     <>
-      <div className="absolute right-0 bottom-full flex flex-row gap-10 mb-20">
-        {teachers.map((sensei, idx) => (
-          <div
-            key={idx}
-            className={`p-3 transition-colors duration-500 ${
-              teacher === sensei ? "bg-white/80" : "bg-white/40"
-            }`}
-          >
-            <div onClick={() => setTeacher(sensei)}>
-              <img
-                src={`/images/${sensei}.jpg`}
-                alt={sensei}
-                className="object-cover w-40 h-40"
-              />
-            </div>
-            <h2 className="text-3xl font-bold mt-3 text-center">{sensei}</h2>
-          </div>
-        ))}
-      </div>
+     
       <div className="absolute left-0 bottom-full flex flex-row gap-2 mb-20">
         <button
           className={` ${
@@ -59,7 +50,7 @@ export const BoardSettings = () => {
           } py-4 px-10 text-4xl rounded-full transition-colors duration-500 backdrop-blur-md`}
           onClick={() => setClassroom("alternative")}
         >
-          Alternative classroom
+          Alternative Look
         </button>
       </div>
       <div className="absolute left-0 top-full flex flex-row gap-2 mt-20">
@@ -69,9 +60,9 @@ export const BoardSettings = () => {
               ? "text-white bg-slate-900/40 "
               : "text-white/45 bg-slate-700/20 "
           } py-4 px-10 text-4xl rounded-full transition-colors duration-500 backdrop-blur-md`}
-          onClick={() => setSpeech("formal")}
+          onClick={handleAssistantClick}
         >
-          Formal
+         Pelin Ai Asistant
         </button>
         <button
           className={` ${
@@ -79,9 +70,9 @@ export const BoardSettings = () => {
               ? "text-white bg-slate-900/40 "
               : "text-white/45 bg-slate-700/20 "
           } py-4 px-10 text-4xl rounded-full transition-colors duration-500 backdrop-blur-md`}
-          onClick={() => setSpeech("casual")}
+          onClick={handleAppointmentClick}
         >
-          Casual
+          Appointment
         </button>
       </div>
       <div className="absolute right-0 top-full flex flex-row gap-2 mt-20">

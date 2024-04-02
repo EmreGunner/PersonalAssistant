@@ -64,6 +64,7 @@ export function Teacher({ teacher, ...props }) {
 
   // Effects and frame actions for animations like idle, talking, and blinking.
   useFrame(({ camera }) => {
+    
     // Smile
     lerpMorphTarget("mouthSmile", 0.2, 0.5);
     // Blinking
@@ -81,6 +82,7 @@ export function Teacher({ teacher, ...props }) {
     ) {
       for (let i = currentMessage.visemes.length - 1; i >= 0; i--) {
         const viseme = currentMessage.visemes[i];
+        
         if (currentMessage.audioPlayer.currentTime * 1000 >= viseme[0]) {
           lerpMorphTarget(viseme[1], 1, 0.2);
           break;
@@ -94,6 +96,9 @@ export function Teacher({ teacher, ...props }) {
           animation === "Talking" ? "Talking2" : "Talking"
         ); // Could load more type of animations and randomization here
       }
+    }
+    else { 
+      lerpMorphTarget("mouthSmile", 0.2, 0.5);
     }
   });
 

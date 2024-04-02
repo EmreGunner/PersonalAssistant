@@ -1,6 +1,7 @@
 import { Noto_Sans_JP, Roboto } from "next/font/google";
 import "./globals.css";
 
+
 const roboto = Roboto({
   subsets: ["latin"],
   display: "swap",
@@ -15,8 +16,8 @@ export const notoSansJP = Noto_Sans_JP({
 });
 
 export const metadata = {
-  title: "Eng To TR AI Teacher",
-  description: "Learn Turkish with AI Teacher",
+  title: "Emre Guner Conversational Portfolio Website",
+  description: "Learn about my projects and book a meeting",
 };
 // Defines global metadata for the application including the title and description.
 // RootLayout component wraps child components with globally defined font styles for consistency across the application.
@@ -37,6 +38,7 @@ export default function RootLayout({ children }) {
         <meta property="og:description" content={metadata.description} />
         <meta property="og:site_name" content={metadata.title} />
       </head>
+      
       <body className={roboto.className}>{children}</body>
     </html>
   );
